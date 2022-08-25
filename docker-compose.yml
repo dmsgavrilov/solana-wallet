@@ -1,0 +1,25 @@
+version: "3"
+
+volumes:
+  postgres_volume:
+
+services:
+  db:
+    build: ./Database
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=123
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+
+  web_app:
+    build: ./App
+    restart: always
+    environment:
+      - DATABASE_URI=postgres://postgres:123@db:5432
+    ports:
+      - "3000:3000"
+    links:
+      - db
